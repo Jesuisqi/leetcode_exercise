@@ -231,23 +231,29 @@ def reverseList(head):
 
 
 def swapPairs(head):
-    """两两交换链表中的节点"""
+    """两两交换链表中的节点
+    假设初始链表为 null -> 1 -> 2 -> 3 -> 4 -> 5，预期输出：null <- 2 <- 1 <- 4 <- 3 <- 5
+    """
     dummy_head = SingleListNode(next=head)
     current = dummy_head
 
     # 必须有cur的下一个和下下个才能交换，否则说明已经交换结束了。链表为偶数个时，current.next为空；为奇数个时，current.next.next为空
     while current.next and current.next.next:
         # 防止节点修改
-        temp = current.next # 初始头节点
-        temp1 = current.next.next # 下一个起始点
+        temp = current.next  # 初始头节点，1
+        temp1 = current.next.next.next  # 下一个起始交换节点，3
+        print(f"temp:{temp}, temp1:{temp1}")
 
+        # 开始翻转
         current.next = current.next.next  # current的下一个节点指向2
         current.next.next = temp  # 2指向1
-        temp.next = temp1 # 下一个起始点，3
-        current = current.next.next
+        temp.next = temp1  # 1指向3
+        # 目前的链表为 null -> 2 -> 1 -> 3 -> 4 -> 5
+
+        # 往后移动两位，接下来对后面两个节点进行交换
+        current = current.next.next  # 虚拟头节点移动到节点1
+
     return dummy_head.next
-
-
 
 
 if __name__ == '__main__':
@@ -262,6 +268,6 @@ if __name__ == '__main__':
     # obj.deleteAtIndex(2)
     # print(obj.get(1))
 
-    head2 = array_2_linkedlist([1, 2, 6, 3, 4, 5])
-    trans = reverseList(head2)
+    head2 = array_2_linkedlist([1, 2, 6, 3, 4])
+    trans = swapPairs(head2)
     print(print_linkedlist_2_list(trans))
