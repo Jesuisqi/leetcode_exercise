@@ -256,6 +256,43 @@ def swapPairs(head):
     return dummy_head.next
 
 
+def removeNthFromEnd(head, n):
+    """删除链表的倒数第n个节点"""
+    dummy_head = SingleListNode(0, head)
+    fast = dummy_head
+    slow = dummy_head
+
+    if n <= 0:
+        raise ValueError("n must be greater than 0")
+
+    # 让快指针先走n+1步，这样当快指针到末尾时，慢指针正好到达倒数第 n 个节点的前一个节点
+    for _ in range(n + 1):
+        if fast is None:
+            raise ValueError("n is greater than the size of the list")
+        fast = fast.next
+
+    # 移动两个指针，直到快速指针到达链表的末尾
+    while fast:
+        slow = slow.next
+        fast = fast.next
+
+    # slow的下一个节点更新为第n个节点的下一个，第n个节点则被删除
+    slow.next = slow.next.next
+    return dummy_head.next
+
+
+def removeNth(head, n):
+    """删除列表的第n个节点"""
+    dummy_head = SingleListNode(next=head)
+    current = dummy_head
+
+    for _ in range(n-1):
+        current = current.next
+
+    current.next = current.next.next
+    return dummy_head.next
+
+
 if __name__ == '__main__':
     # head1 = array_2_linkedlist([1, 2, 6, 3, 4, 5, 6])
     # listnode = removeElements(head=head1, target=6)
@@ -269,5 +306,5 @@ if __name__ == '__main__':
     # print(obj.get(1))
 
     head2 = array_2_linkedlist([1, 2, 6, 3, 4])
-    trans = swapPairs(head2)
+    trans = removeNth(head2, 5)
     print(print_linkedlist_2_list(trans))
