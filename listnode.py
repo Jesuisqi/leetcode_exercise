@@ -286,11 +286,49 @@ def removeNth(head, n):
     dummy_head = SingleListNode(next=head)
     current = dummy_head
 
-    for _ in range(n-1):
+    for _ in range(n - 1):
         current = current.next
 
     current.next = current.next.next
     return dummy_head.next
+
+
+def getLength(head) -> int:
+    length = 0
+    while head:
+        length += 1
+        head = head.next
+    return length
+
+
+def moveForward(head, steps: int):
+    while steps > 0:
+        head = head.next
+        steps -= 1
+    return head
+
+
+def getIntersectionNode(headA, headB):
+    """
+    链表相交。此题的重点是：求两个链表交点节点的指针，交点不仅仅是数值相等，也要是指针相等，即相交点往后的内存地址都相同。
+    """
+    lenA = getLength(headA)
+    lenB = getLength(headB)
+
+    # 通过移动较长的链表，使两链表长度相等
+    if lenA > lenB:
+        headA = moveForward(headA, lenA - lenB)
+    else:
+        headB = moveForward(headB, lenB - lenA)
+
+    # 将两个头向前移动，直到它们相交
+    while headA and headB:
+        if headA == headB:
+            return headA
+        headA = headA.next
+        headB = headB.next
+
+    return "No Intersection existed"
 
 
 if __name__ == '__main__':
@@ -305,6 +343,12 @@ if __name__ == '__main__':
     # obj.deleteAtIndex(2)
     # print(obj.get(1))
 
-    head2 = array_2_linkedlist([1, 2, 6, 3, 4])
-    trans = removeNth(head2, 5)
-    print(print_linkedlist_2_list(trans))
+    ## 创建相交链表
+    common = SingleListNode(2, SingleListNode(4))
+    head1 = SingleListNode(3, common)
+    head2 = SingleListNode(0, SingleListNode(5, SingleListNode(6, common)))
+    print(print_linkedlist_2_list(head1))
+    print(print_linkedlist_2_list(head2))
+
+    result = getIntersectionNode(head1, head2)
+    print(result.val)
