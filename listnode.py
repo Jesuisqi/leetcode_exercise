@@ -343,7 +343,7 @@ if __name__ == '__main__':
     # obj.deleteAtIndex(2)
     # print(obj.get(1))
 
-    ## 创建相交链表
+    # 创建相交链表
     common = SingleListNode(2, SingleListNode(4))
     head1 = SingleListNode(3, common)
     head2 = SingleListNode(0, SingleListNode(5, SingleListNode(6, common)))
