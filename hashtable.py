@@ -155,7 +155,7 @@ def two_sum(list: [int], target: int) -> list[int]:
 # 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
 # 满足要求的三元组集合为： [ [-1, 0, 1], [-1, -1, 2] ]
 # 注意[0， 0， 0， 0] 这组数据
-def three_sum(nums: [int]) -> list[list]:
+def three_sum(nums: list[int]) -> list[list]:
     """
     重点：去重逻辑的思考（要做的是不能有重复的三元组，但三元组内的元素是可以重复的）
     a + b + c = 0 -> 双指针法：nums[i] + nums[left] + nums[right] = 0
@@ -183,16 +183,71 @@ def three_sum(nums: [int]) -> list[list]:
             else:
                 result.append([nums[i], nums[left], nums[right]])  # 等于0的情况，添加进result
 
-            # 确保b和c不重复
-            while left < right and nums[right] == nums[right - 1]:
-                right -= 1  # 如果右指针往左移动一位还是原数值大小的话，为了避免重复，则不重复计算，继续往左再移动
-            while left < right and nums[left] == nums[left + 1]:
+                # 确保b和c不重复
+                while left < right and nums[right] == nums[right - 1]:
+                    right -= 1  # 如果右指针往左移动一位还是原数值大小的话，为了避免重复，则不重复计算，继续往左再移动
+                while left < right and nums[left] == nums[left + 1]:
+                    left += 1
+
+                right -= 1
                 left += 1
 
-            right -= 1
-            left += 1
-
     return result
+
+
+# 四数之和。
+# 给定一个包含 n 个整数的数组 nums 和一个目标值 target，判断 nums 中是否存在四个元素 a，b，c 和 d ，使得 a + b + c + d 的值与 target 相等？找出所有满足条件且不重复的四元组。答案中不可以包含重复的四元组。
+# 示例： 给定数组 nums = [1, 0, -1, 0, -2, 2]，和 target = 0。 满足要求的四元组集合为： [ [-1, 0, 0, 1], [-2, -1, 1, 2], [-2, 0, 0, 2] ]
+def four_sum(nums: list[int], target: int) -> list[list[int]]:
+    """字典法，可适用三数之和。"""
+    freq = dict()  # 统计 nums 列表中每个数字出现的频率。
+    for i in nums:
+        freq[i] = freq.get(i, 0) + 1  # 确保在字典中查找数字时，若该数字不在字典中，将返回默认值 0。
+
+    records = set()
+    for i in range(len(nums)):
+        for j in range(i + 1, len(nums)):
+            for k in range(j + 1, len(nums)):
+                val = target - nums[i] - nums[j] - nums[k]
+                if val in freq:
+                    count = (nums[i] == val) + (nums[j] == val) + (
+                            nums[k] == val)  # max: True + True + True = 3。统计 nums[i], nums[j], nums[k] 中有多少个等于 val
+                    if freq[
+                        val] > count:  # 还需要检查 val 的数量是否足够，避免在三元组中使用了过多与 val 相同的数字。如果 count（当前三元组中与 val 相等的数字个数）比 freq[val] 小，意味着还可以在这个组合中合法地加入 val。如果 count 已经等于 freq[val]，说明三元组中已经使用了所有可能的 val，就不能再添加更多的 val。
+                        records.add(tuple((sorted([nums[i], nums[j], nums[k], val]))))
+
+    return [list(x) for x in records]
+
+
+# 四数相加。
+# 给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+# 为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。所有整数的范围在 -2^28 到 2^28 - 1 之间，最终结果不会超过 2^31 - 1 。
+# A = [ 1, 2]
+# B = [-2,-1]
+# C = [-1, 2]
+# D = [ 0, 2] 输出: 2
+# 两个元组如下:
+# (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+# (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+def FourSumCount(numsA: list[int], numsB: list[int], numsC: list[int], numsD: list[int]) -> int:
+    """
+    将问题拆分为两部分来减少计算量。使用哈希表存储 nums1 和 nums2 的和，使得在 nums3 和 nums4 中查找相加为零的和变得高效。这避免了四重循环，降低了时间复杂度。
+    """
+    hashmap = {}  # 将 numsA 和 numsB 的和及其出现次数存储起来
+    for n1 in numsA:
+        for n2 in numsB:
+            if n1 + n2 in hashmap:
+                hashmap[n1 + n2] += 1
+            hashmap[n1 + n2] = 1
+
+    count = 0
+    for n3 in numsC:
+        for n4 in numsD:
+            key = -(n3 + n4)
+            if key in hashmap:  # 如果n3+n4的相反数在hashmap中已经存在，则说明hashmap中有 n1+n2=-(n3+n4) -> 即满足，n1+n2+n3+n4=0
+                count += hashmap[key]  # 是在本身hashmap[key]的基础上增加计数，如果使用 count += 1，就会忽略相同和出现多次的情况。
+
+    return count
 
 
 if __name__ == '__main__':
@@ -208,4 +263,8 @@ if __name__ == '__main__':
 
     # print(two_sum([1, 2, 3, 4, 5, 6], 6))
 
-    print(three_sum([-1, 0, 1, 2, -1, -4]))
+    # print(three_sum([-1, 0, 1, 2, -1, -4]))
+
+    # print(four_sum([1, 0, -1, 0, -2, 2], 0))
+
+    print(FourSumCount([1, 2], [-2, -1], [-1, 2], [0, 2]))
