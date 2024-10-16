@@ -250,6 +250,18 @@ def FourSumCount(numsA: list[int], numsB: list[int], numsC: list[int], numsD: li
     return count
 
 
+# 赎金信。
+# 给定一个赎金信 (ransom) 字符串和一个杂志(magazine)字符串，判断第一个字符串 ransom 能不能由第二个字符串 magazines 里面的字符构成。如果可以构成，返回 true ；否则返回 false。
+# (题目说明：为了不暴露赎金信字迹，要从杂志上搜索各个需要的字母，组成单词来表达意思。杂志字符串中的每个字符只能在赎金信字符串中使用一次。)
+# canConstruct("a", "b") -> false
+# canConstruct("aa", "ab") -> false
+# canConstruct("aa", "aab") -> true
+
+def canConstruct(ransomNote: str, magazine: str) -> bool:
+    """比较字符 i 在 ransomNote 和 magazine 中出现的次数。遍历 ransomNote 中的每个字符，确保它在 magazine 中出现的次数不低于在 ransomNote 中的次数。如果每个字符的出现次数都满足这个条件，那么就可以用 magazine 构造出 ransomNote。"""
+    return all(ransomNote.count(i) <= magazine.count(i) for i in set(ransomNote))
+
+
 if __name__ == '__main__':
     # s = "anAgram"
     # t = "nagaram"
