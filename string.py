@@ -57,9 +57,27 @@ def reverseWords2(sentence: str) -> str:
     return " ".join(sentence)
 
 
+# KMP算法：字符串匹配问题。前缀表：最长相等前后缀的长度。 
+# KMP经典题目：实现 strStr() 函数。
+# 给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。当 needle 是空字符串时我们应当返回 0。
+# 示例 1: 输入: haystack = "hello", needle = "ll" 输出: 2
+# 示例 2: 输入: haystack = "aaaaa", needle = "bba" 输出: -1
+
+
+
+
 if __name__ == '__main__':
     # print(reverse("abcdefg", int(2)))
 
     # print(change("a1b2c3"))
 
-    print(reverseWords2("a good   example"))
+    # print(reverseWords2("a good   example"))
+
+    haystack = "hello"
+    needle = "ll"
+    print(haystack.find(needle))
+    from datetime import datetime
+    start = datetime.strptime("2023-07-21","%Y-%m-%d")
+    end = datetime.strptime("2024-10-21","%Y-%m-%d")
+    t = end-start
+    print(t)
