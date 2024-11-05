@@ -1,4 +1,5 @@
 from typing import List
+import collections
 
 
 class TreeNode:
@@ -111,3 +112,25 @@ def iter_inorderTraversal(root: TreeNode) -> List[int]:
             res.append(cur.val)
             cur = cur.right  # 取栈顶元素右结点
     return res
+
+
+# 层序遍历
+def levelOrder(root: TreeNode) -> List[List[int]]:
+    if not root:
+        return []
+
+    queue = collections.deque([root])  # 用队列来存储每一层的结点
+    res = []
+    while queue:
+        level = []
+        for _ in range(len(queue)):
+            cur = queue.popleft()
+            level.append(cur.val)
+            if cur.left:  # left和right顺序不能变
+                queue.append(cur.left)
+            if cur.right:
+                queue.append(cur.right)
+        res.append(level)
+    return res  # 如果是从底部开始向上取的话，最后的结果reverse一下就可以了 -> res[::-1]
+
+
